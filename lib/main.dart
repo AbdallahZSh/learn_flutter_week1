@@ -1,121 +1,165 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: MyApp(), // هنا نخبر التطبيق أن يبدأ من واجهتك التي صممتها
+  ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
+  State<MyApp> createState() => _MyAppState();
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class _MyAppState extends State<MyApp> {
+  //  تعريف المتغير هنا داخل الـ State لكي يعمل الـ Checkbox
+  bool _addExtraCheese = false;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text("Menu"),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        foregroundColor: Colors.black,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // const Text(
+              //   "welcome to cofe",
+              //   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              // ),
+              // const SizedBox(height: 10),
+
+              //  الـ Checkbox يعمل الآن بشكل سليم بفضل الـ setState
+              CheckboxListTile(
+                title: const Text("Are you Need Turn on Internet?"),
+                //subtitle: const Text("السعر: +1\$"),
+                value: _addExtraCheese,
+                secondary: const Icon(Icons.signal_wifi_4_bar, color: Colors.orange),
+                activeColor: Colors.orange,
+                controlAffinity: ListTileControlAffinity.leading,
+                onChanged: (bool? value) {
+                  setState(() {
+                    _addExtraCheese = value!;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 20),
+
+              //Drink
+              const Text("Drink", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
+              buildHorizontalList([
+                buildFoodItem("Coffee", "2\$", "assets/images/coffee.jpg"),
+                buildFoodItem("Tea", "1\$", "assets/images/tea.jpg"),
+                buildFoodItem("Espresso", "1\$", "assets/images/espresso.jpg"),
+                buildFoodItem("Latte", "2\$", "assets/images/latte.jpg"),
+              ]),
+
+              const SizedBox(height: 20),
+
+              //Soft & Natural juices
+              const Text("Soft & Natural juices", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
+              buildHorizontalList([
+                buildFoodItem("Co Co Cola", "2\$", "assets/images/cola.jpg"),
+                buildFoodItem("Orange", "1\$", "assets/images/orange.jpg"),
+                buildFoodItem("Lemon", "2\$", "assets/images/lemon.jpg"),
+                buildFoodItem("Sprite", "2\$", "assets/images/sprite.jpg"),
+              ]),
+
+              const SizedBox(height: 30),
+
+              //Food
+              const Text("Food", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
+              buildHorizontalList([
+                buildFoodItem("Mozzarell", "2\$", "assets/images/zzarella.jpg"),
+                buildFoodItem("Pizza", "3\$", "assets/images/pizza.webp"),
+                buildFoodItem("Burger 🍔", "3\$", "assets/images/burger.jpg"),
+                buildFoodItem("Shawarma", "3\$", "assets/images/shawarmaWrap.jpg"),
+              ]),
+
+              const SizedBox(height: 30),
+
+              //Games
+              const Text("Games", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
+              buildHorizontalList([
+                buildFoodItem("Play Station", "3\$", "assets/images/PlayStation.jpg"),
+                buildFoodItem("PUBG", "3\$", "assets/images/pubg.jpg"),
+                buildFoodItem("GTA 15", "3\$", "assets/images/gta.jpg"),
+              ]),
+              const SizedBox(height: 50),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+    );
+  }
+
+  // I'm use this function to build horizontal list and reduce code
+  Widget buildHorizontalList(List<Widget> items) {
+    return SizedBox(
+      height: 250,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: items,
+      ),
+    );
+  }
+
+  // I'm use this function to build food item and reduce code
+  Widget buildFoodItem(String name, String price, String imagePath) {
+    return Container(
+      width: 170,
+      margin: const EdgeInsets.only(right: 15, bottom: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.orange, width: 2),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(13)),
+              child: Image.asset(
+                imagePath,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey[300], child: const Icon(Icons.image_not_supported)),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Column(
+              children: [
+                Text(name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                Text("Price: $price", style: const TextStyle(fontSize: 13, color: Colors.grey)),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
